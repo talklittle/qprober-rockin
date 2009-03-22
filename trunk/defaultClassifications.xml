@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<categories>
+    <category name="Root">
+        <queries>
+        </queries>
+        <categories>
+            <category name="Computers">
+                <queries>
+                    <query>cpu</query>
+                    <query>java</query>
+                    <query>module</query>
+                    <query>multimedia</query>
+                    <query>perl</query>
+                    <query>vb</query>
+                    <query>agp card</query>
+                    <query>application windows</query>
+                    <query>applet code</query>
+                    <query>array code</query>
+                    <query>audio file</query>
+                    <query>avi file</query>
+                    <query>bios</query>
+                    <query>buffer code</query>
+                    <query>bytes code</query>
+                    <query>shareware</query>
+                    <query>card drivers</query>
+                    <query>card graphics</query>
+                    <query>card pc</query>
+                    <query>pc windows</query>
+                </queries>
+                <categories>
+                    <category name="Hardware">
+                        <queries>
+                            <query>bios</query>
+                            <query>motherboard</query>
+                            <query>board fsb</query>
+                            <query>board overclocking</query>
+                            <query>fsb overclocking</query>
+                            <query>bios controller ide</query>
+                            <query>cables drive floppy</query>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                    <category name="Programming">
+                        <queries>
+                            <query>actionlistener</query>
+                            <query>algorithms</query>
+                            <query>alias</query>
+                            <query>alloc</query>
+                            <query>ansi</query>
+                            <query>api</query>
+                            <query>applet</query>
+                            <query>argument</query>
+                            <query>array</query>
+                            <query>binary</query>
+                            <query>boolean</query>
+                            <query>borland</query>
+                            <query>char</query>
+                            <query>class</query>
+                            <query>code</query>
+                            <query>compile</query>
+                            <query>compiler</query>
+                            <query>component</query>
+                            <query>container</query>
+                            <query>controls</query>
+                            <query>cpan</query>
+                            <query>java</query>
+                            <query>perl</query>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                </categories>
+            </category>
+            <category name="Health">
+                <queries>
+                    <query>acupuncture</query>
+                    <query>aerobic</query>
+                    <query>aerobics</query>
+                    <query>aids</query>
+                    <query>cancer</query>
+                    <query>cardiology</query>
+                    <query>cholesterol</query>
+                    <query>diabetes</query>
+                    <query>diet</query>
+                    <query>fitness</query>
+                    <query>hiv</query>
+                    <query>insulin</query>
+                    <query>nurse</query>
+                    <query>squats</query>
+                    <query>treadmill</query>
+                    <query>walkers</query>
+                    <query>calories fat</query>
+                    <query>carb carbs</query>
+                    <query>doctor health</query>
+                    <query>doctor medical</query>
+                    <query>eating fat</query>
+                    <query>fat muscle</query>
+                    <query>health medicine</query>
+                    <query>health nutritional</query>
+                    <query>hospital medical</query>
+                    <query>hospital patients</query>
+                    <query>medical patient</query>
+                    <query>medical treatment</query>
+                    <query>patients treatment</query>
+                </queries>
+                <categories>
+                    <category name="Fitness">
+                        <queries>
+                            <query>aerobic</query>
+                            <query>fat</query>
+                            <query>fitness</query>
+                            <query>walking</query>
+                            <query>workout</query>
+                            <query>acid diets</query>
+                            <query>bodybuilding protein</query>
+                            <query>calories protein</query>
+                            <query>calories weight</query>
+                            <query>challenge walk</query>
+                            <query>dairy milk</query>
+                            <query>eating protein</query>
+                            <query>eating weight</query>
+                            <query>exercise protein</query>
+                            <query>exercise weight</query>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                    <category name="Diseases">
+                        <queries>
+                            <query>aids</query>
+                            <query>cancer</query>
+                            <query>dental</query>
+                            <query>diabetes</query>
+                            <query>hiv</query>
+                            <query>cardiology</query>
+                            <query>aspirin cardiologist</query>
+                            <query>aspirin cholesterol</query>
+                            <query>blood heart</query>
+                            <query>blood insulin</query>
+                            <query>cholesterol doctor</query>
+                            <query>cholesterol lipitor</query>
+                            <query>heart surgery</query>
+                            <query>radiation treatment</query>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                </categories>
+            </category>
+            <category name="Sports">
+                <queries>
+                    <query>laker</query>
+                    <query>ncaa</query>
+                    <query>pacers</query>
+                    <query>soccer</query>
+                    <query>teams</query>
+                    <query>wnba</query>
+                    <query>nba</query>
+                    <query>avg league</query>
+                    <query>avg nba</query>
+                    <query>ball league</query>
+                    <query>ball referee</query>
+                    <query>ball team</query>
+                    <query>blazers game</query>
+                    <query>championship team</query>
+                    <query>club league</query>
+                    <query>fans football</query>
+                    <query>game league</query>
+                </queries>
+                <categories>
+                    <category name="Basketball">
+                        <queries>
+                            <query>nba</query>
+                            <query>pacers</query>
+                            <query>kobe</query>
+                            <query>laker</query>
+                            <query>shaq</query>
+                            <query>blazers</query>
+                            <query>knicks</query>
+                            <query>sabonis</query>
+                            <query>shaquille</query>
+                            <query>laettner</query>
+                            <query>wnba</query>
+                            <query>rebounds</query>
+                            <query>dunks</query>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                    <category name="Soccer">
+                        <queries>
+                            <query>uefa</query>
+                            <query>leeds</query>
+                            <query>bayern</query>
+                            <query>bundesliga</query>
+                            <query>premiership</query>
+                            <query>lazio</query>
+                            <query>mls</query>
+                            <query>hooliganism</query>
+                            <query>juventus</query>
+                            <query>liverpool</query>
+                            <query>fifa</query>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                </categories>
+            </category>
+        </categories>
+    </category>
+</categories>
