@@ -2,9 +2,7 @@ package coms6111.proj2;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,13 +20,11 @@ public class RunnerCLI {
 	protected static final Log log = LogFactory.getLog(RunnerCLI.class);
 	
 	private static DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	private static HashMap<String, List<String>> hierarchy = new HashMap<String, List<String>>();
-	private static HashMap<String, List<String>> associatedQueries = new HashMap<String, List<String>>();
+	private static HashMap<String, ClassificationNode> classificationNodes = new HashMap<String, ClassificationNode>();
 	
-	private static void constructClassificationTables(Node parent, Node categories) {
+	private static void constructClassificationTables(Node categories) {
 		NodeList eachCategory, children, queriesNodeList;
 		Node cat, child, queryNode;
-		ArrayList<String> subcategoriesList, queriesList;
 		String categoryName;
 		
 		if (categories == null)
@@ -36,39 +32,54 @@ public class RunnerCLI {
 		eachCategory = categories.getChildNodes();
 		// For each category, save its queries and subcategories
 		// And then recurse on the subcategories
-		subcategoriesList = new ArrayList<String>();
 //		log.debug(eachCategory.getLength());
 		for (int i = 0; i < eachCategory.getLength(); i++) {
+			ClassificationNode cnParent;
+			
 			cat = eachCategory.item(i);
 			if (!cat.getNodeName().equals("category"))
 				continue;
-//			log.debug("cat" + cat);
-//			log.debug("getatt" + cat.getAttributes());
-//			log.debug(cat.getAttributes().getNamedItem("name"));
 			categoryName = cat.getAttributes().getNamedItem("name").getNodeValue();
-			subcategoriesList.add(categoryName);
-			children = cat.getChildNodes();
+			log.debug("categoryName " + categoryName);
+			
+			if (classificationNodes.containsKey(cat))
+				cnParent = classificationNodes.get(categoryName);
+			else {
+				// Add category to table of all category nodes
+				cnParent = new ClassificationNode(categoryName);
+				classificationNodes.put(categoryName, cnParent);
+			}
+			
 			// Children are "queries" and "categories"
+			children = cat.getChildNodes();
 			for (int j = 0; j < children.getLength(); j++) {
 				child = children.item(j);
 				if (child.getNodeName().equals("queries")) {
 					queriesNodeList = child.getChildNodes();
-					queriesList = new ArrayList<String>();
 					for (int k = 0; k < queriesNodeList.getLength(); k++) {
 						queryNode = queriesNodeList.item(k);
+						// Ignore whitespace and other nodes that shouldn't be there
 						if (!queryNode.getNodeName().equals("query"))
 							continue;
-						queriesList.add(queryNode.getTextContent());
+						String querySubcat = queryNode.getAttributes().getNamedItem("subcategory").getNodeValue();
+						// Add the query to associated queries for parent, pointing to child
+						ClassificationNode cnChild;
+						if (classificationNodes.containsKey(querySubcat)) {
+							cnChild = classificationNodes.get(querySubcat);
+						} else {
+							// Add subcategory to table of all category nodes
+							cnChild = new ClassificationNode(querySubcat);
+							classificationNodes.put(querySubcat, cnChild);
+						}
+						// Add a mapping from parent to this child based on query term
+						cnParent.addQueryMapping(queryNode.getTextContent(), cnChild);
 					}
-					associatedQueries.put(categoryName, queriesList);
 				}
 				else if (child.getNodeName().equals("categories")) {
-					constructClassificationTables(cat, child);
+					constructClassificationTables(child);
 				}
 			}
 		}
-		if (parent != null)
-			hierarchy.put(parent.getAttributes().getNamedItem("name").getNodeValue(), subcategoriesList);
 	}
 	
 	/**
@@ -85,7 +96,7 @@ public class RunnerCLI {
 				try {
 					xmlReader = dbf.newDocumentBuilder();
 					xmlDoc = xmlReader.parse(defaultClassifications);
-					constructClassificationTables(null, xmlDoc.getFirstChild());
+					constructClassificationTables(xmlDoc.getFirstChild());
 					
 				} catch (ParserConfigurationException e) {
 					// TODO Auto-generated catch block
@@ -101,10 +112,12 @@ public class RunnerCLI {
 				log.debug("Couldn't find file " + defaultClassifications.getAbsolutePath() + " exists");
 			}
 		}
-		for (String category : hierarchy.keySet()) {
+		for (String category : classificationNodes.keySet()) {
 			log.debug("CATEGORY: " + category);
-			for (String query : associatedQueries.get(category)) {
-				log.debug("[" + query + "]");
+			ClassificationNode cn = classificationNodes.get(category);
+			
+			for (String query : cn.getQueries()) {
+				log.debug("[" + query + "] -- " + cn.getChildByQuery(query).getName());
 			}
 			log.debug("--");
 		}

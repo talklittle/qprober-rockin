@@ -1,37 +1,40 @@
 package coms6111.proj2;
 
+import java.util.HashMap;
+import java.util.Set;
+
 public class ClassificationNode {
 	
 	private String name;
-	private String[] childrenTypes, queries;
+	// Map each associated query to the subcategory that it points to
+	private HashMap<String, ClassificationNode> queryMap = new HashMap<String, ClassificationNode>();
 	
 	
 	public ClassificationNode(String newName) {
 		name = newName;
 	}
 	
-	public void setName(String newName) {
-		name = newName;
-	}
-	
-	public void setChildrenTypes(String[] newTypes) {
-		childrenTypes = newTypes;
-	}
-	
-	public void setQueries(String[] newQueries) {
-		queries = newQueries;
+	public ClassificationNode getChildByQuery(String query) {
+		return queryMap.get(query);
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public String[] getChildrenTypes() {
-		return childrenTypes;
+	public Set<String> getQueries() {
+		return queryMap.keySet();
 	}
 	
-	public String[] getQueries() {
-		return queries;
+	public void addQueryMapping(String query, ClassificationNode child) {
+		queryMap.put(query, child);
+	}
+
+	public void setName(String newName) {
+		name = newName;
 	}
 	
+	public void setQueryMap(HashMap<String, ClassificationNode> newQueryMap) {
+		queryMap = newQueryMap;
+	}
 }
