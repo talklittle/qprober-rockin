@@ -1,7 +1,11 @@
 package coms6111.proj2;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -86,30 +90,51 @@ public class RunnerCLI {
 		DocumentBuilder xmlReader;
 		Document xmlDoc;
 		
-		if (args.length >= 1) {
-			File defaultClassifications = new File(args[0]);
-			if (defaultClassifications.exists()) {
-				log.debug(defaultClassifications.getAbsolutePath() + " exists");
-				try {
-					xmlReader = dbf.newDocumentBuilder();
-					xmlDoc = xmlReader.parse(defaultClassifications);
-					constructClassificationTables(xmlDoc.getFirstChild());
-					
-				} catch (Exception e) {
-					log.error(null, e);
-				}
-			} else {
-				log.debug("Couldn't find file " + defaultClassifications.getAbsolutePath() + " exists");
-			}
+		if (args.length < 1) {
+			log.error("Usage:");
+			log.error("java RunnerCLI <defaultClassifications.xml>");
+			System.exit(1);
 		}
-		for (String category : classificationNodes.keySet()) {
-			log.debug("CATEGORY: " + category);
-			ClassificationNode cn = classificationNodes.get(category);
-			
-			for (String query : cn.getQueries()) {
-				log.debug("[" + query + "] -- " + cn.getChildByQuery(query).getName());
+		File defaultClassifications = new File(args[0]);
+		if (defaultClassifications.exists()) {
+			log.debug(defaultClassifications.getAbsolutePath() + " exists");
+			try {
+				xmlReader = dbf.newDocumentBuilder();
+				xmlDoc = xmlReader.parse(defaultClassifications);
+				constructClassificationTables(xmlDoc.getFirstChild());
+				
+			} catch (Exception e) {
+				log.error(null, e);
+				System.exit(1);
 			}
-			log.debug("--");
+		} else {
+			log.debug("Couldn't find file " + defaultClassifications.getAbsolutePath() + " exists");
 		}
+
+//		for (String category : classificationNodes.keySet()) {
+//			log.debug("CATEGORY: " + category);
+//			ClassificationNode cn = classificationNodes.get(category);
+//			
+//			for (String query : cn.getQueries()) {
+//				log.debug("[" + query + "] -- " + cn.getChildByQuery(query).getName());
+//			}
+//			log.debug("--");
+//		}
+		
+		// XXX DEBUG
+		TreeSet<String> categories = new TreeSet<String>();
+		categories.add("Root");
+		categories.add("Health");
+		Set<String> queries = DocumentSampler.getQueriesToSample(categories, classificationNodes);
+		URL site = null;
+		try {
+			site = new URL("http://diabetes.org");
+		} catch (MalformedURLException e) {
+			log.error("Bad url", e);
+			System.exit(0);
+		}
+		Resultset rs = DocumentSampler.sample(site, queries);
+		ContentSummary cs = ContentSummaryConstructor.construct("http://diabetes.org", rs);
+		cs.printAlphabeticalOrder(System.out);
 	}
 }

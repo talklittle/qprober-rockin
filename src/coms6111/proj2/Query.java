@@ -5,7 +5,7 @@ import java.util.*;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -21,18 +21,35 @@ public class Query {
 		this.setString(queryString);
 	}
 	
-	public Resultset execute(int numResults) {
-		String request = "http://api.search.yahoo.com/WebSearchService/V1/webSearch";
+	public Resultset execute(int numResults, String sites) {
+//		String request = "http://api.search.yahoo.com/WebSearchService/V1/webSearch";
+		String request = "http://boss.yahooapis.com/ysearch/web/v1/";
 	    HttpClient client = new HttpClient();
 
-	    PostMethod method = new PostMethod(request);
+//	    PostMethod method = new PostMethod(request);
+	    
+	    // Construct query URL
+	    request += myQueryString + "?";
+	    request += "appid=" + appid + "&";
+	    request += "count=" + numResults + "&";
+	    request += "sites=" + sites + "&";
+	    request += "format=xml";
+	    
+	    GetMethod method = new GetMethod(request);
 
-	    // Add POST parameters
-	    method.addParameter("appid", appid);
-	    method.addParameter("query", myQueryString);
-	    method.addParameter("results", ""+numResults);
-
-	    // Send POST request
+//	    // Add POST parameters
+//	    method.addParameter("appid", appid);
+//	    method.addParameter("query", myQueryString);
+//	    method.addParameter("results", ""+numResults);
+//	    if (sites != null && !sites.isEmpty()) {
+//	    	log.info("sites=" + sites);
+//	    	method.addParameter("sites", sites);
+//	    } else {
+//	    	log.warn("No sites provided to Yahoo! query");
+//	    }
+//
+	    log.debug(request);
+	    // Send HTTP request
 	    try {
 	    	int statusCode = client.executeMethod(method);
 	        if (statusCode != HttpStatus.SC_OK) {

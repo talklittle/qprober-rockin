@@ -20,7 +20,7 @@ public class LynxRunner {
 
         try {
         	
-            String cmdline[] = {"/usr/local/bin/lynx", "--dump", url };
+            String cmdline[] = {"/usr/bin/lynx", "--dump", url };
             Process p = Runtime.getRuntime().exec(cmdline);
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
