@@ -2,6 +2,7 @@ package coms6111.proj2;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,7 +36,13 @@ public class DocumentSampler {
 		return returnMe; 
 	}
 	
-	public Resultset[] sample(URL database, Set<String> queries) {
+	/**
+	 * Sample a database using the list of queries.
+	 * @param database URL of database to sample
+	 * @param queries Set of query Strings
+	 * @return Single large Resultset with unique results
+	 */
+	public Resultset sample(URL database, Set<String> queries) {
 		ArrayList<Resultset> resultsetList = new ArrayList<Resultset>();
 		int retries;
 		
@@ -71,7 +78,25 @@ public class DocumentSampler {
 			}	
 		}
 		
-		return resultsetList.toArray(new Resultset[0]);
+		return combineResultsets(resultsetList);
+	}
+	
+	/**
+	 * Create a new Resultset containing unique Results from
+	 * the Resultsets in the list
+	 * @param rsList A Collection of Resultsets
+	 * @return A new Resultset containing unique Results
+	 */
+	public Resultset combineResultsets(Collection<Resultset> rsList) {
+		HashSet<Result> rsSet = new HashSet<Result>();
+		
+		for (Resultset rs : rsList) {
+			for (Iterator<Result> it = rs.iterator(); it.hasNext(); ) {
+				Result r = it.next();
+				rsSet.add(r);
+			}
+		}
+		return new Resultset(rsSet);
 	}
 	
 	

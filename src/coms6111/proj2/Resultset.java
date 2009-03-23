@@ -20,8 +20,8 @@ public class Resultset {
 	private List<Result> myResults;
 	private int resultSize;
 	
-	public Resultset(List<Result> results) {
-		myResults = results;
+	public Resultset(Collection<Result> results) {
+		myResults = new ArrayList<Result>(results);
 		if (results != null)
 			resultSize = results.size();
 		else
