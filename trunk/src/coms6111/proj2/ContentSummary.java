@@ -67,5 +67,10 @@ public class ContentSummary {
 				log.error("Error writing content summary", e);
 			}
 		}
+		try {
+			out.flush();
+		} catch (IOException e) {
+			log.error("Error flushing content summary", e);
+		}
 	}
 }

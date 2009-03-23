@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<categories>
+    <category name="Root">
+        <queries>
+            <query subcategory="Computers">cpu</query>
+            <query subcategory="Computers">java</query>
+            <query subcategory="Computers">module</query>
+            <query subcategory="Computers">multimedia</query>
+            <query subcategory="Health">acupuncture</query>
+            <query subcategory="Health">aerobic</query>
+            <query subcategory="Health">aerobics</query>
+            <query subcategory="Health">aids</query>
+            <query subcategory="Sports">laker</query>
+            <query subcategory="Sports">ncaa</query>
+            <query subcategory="Sports">pacers</query>
+            <query subcategory="Sports">soccer</query>
+        </queries>
+        <categories>
+            <category name="Computers">
+                <queries>
+                    <query subcategory="Hardware">bios</query>
+                    <query subcategory="Hardware">motherboard</query>
+                    <query subcategory="Programming">actionlistener</query>
+                    <query subcategory="Programming">algorithms</query>
+                </queries>
+                <categories>
+                    <category name="Hardware">
+                        <queries>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                    <category name="Programming">
+                        <queries>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                </categories>
+            </category>
+            <category name="Health">
+                <queries>
+                    <query subcategory="Fitness">aerobic</query>
+                    <query subcategory="Fitness">fat</query>
+                    <query subcategory="Diseases">aids</query>
+                    <query subcategory="Diseases">cancer</query>
+                </queries>
+                <categories>
+                    <category name="Fitness">
+                        <queries>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                    <category name="Diseases">
+                        <queries>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                </categories>
+            </category>
+            <category name="Sports">
+                <queries>
+                    <query subcategory="Basketball">nba</query>
+                    <query subcategory="Basketball">pacers</query>
+                    <query subcategory="Soccer">uefa</query>
+                    <query subcategory="Soccer">leeds</query>
+                </queries>
+                <categories>
+                    <category name="Basketball">
+                        <queries>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                    <category name="Soccer">
+                        <queries>
+                        </queries>
+                        <categories>
+                        </categories>
+                    </category>
+                </categories>
+            </category>
+        </categories>
+    </category>
+</categories>

@@ -38,7 +38,7 @@ public class Resultset {
 		XPath xPath=factory.newXPath();
 
 		//Get all search Result nodes
-		NodeList nodes = (NodeList)xPath.evaluate("/ResultSet/Result", response, XPathConstants.NODESET);
+		NodeList nodes = (NodeList)xPath.evaluate("/ysearchresponse/resultset_web/result", response, XPathConstants.NODESET);
 		int nodeCount = nodes.getLength();
         
 		myResults = new ArrayList<Result>();
@@ -46,9 +46,9 @@ public class Resultset {
 		//iterate over search Result nodes
 		for (int i = 0; i < nodeCount; i++) {
 			//Get each xpath expression as a string
-			String title = (String)xPath.evaluate("Title", nodes.item(i), XPathConstants.STRING);
-			String summary = (String)xPath.evaluate("Summary", nodes.item(i), XPathConstants.STRING);
-			String url = (String)xPath.evaluate("Url", nodes.item(i), XPathConstants.STRING);
+			String title = (String)xPath.evaluate("title", nodes.item(i), XPathConstants.STRING);
+			String summary = (String)xPath.evaluate("abstract", nodes.item(i), XPathConstants.STRING);
+			String url = (String)xPath.evaluate("url", nodes.item(i), XPathConstants.STRING);
 			//print out the Title, Summary, and URL for each search result
 			log.info("-- Result " + (i+1));
 			log.info("Title: " + title);

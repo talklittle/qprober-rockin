@@ -49,12 +49,12 @@ public class DocumentSampler {
 		
 		for (Iterator<String> it = queries.iterator(); it.hasNext(); ) {
 			String qStr = it.next();
-			Query q = new Query(qStr + " site="+database.toString());
+			Query q = new Query(qStr);
 			Resultset rs;
 			
 			retries = 0;
 			do {
-				rs = q.execute(topN);
+				rs = q.execute(topN, database.getHost());
 				
 				if (rs != null)
 					break;
@@ -65,6 +65,8 @@ public class DocumentSampler {
 				}
 				retries++;
 			} while (rs == null && retries <= maxRetries);
+			if (rs == null)
+				continue;
 		
 			// Add the results of this query to the collection
 			resultsetList.add(rs);
