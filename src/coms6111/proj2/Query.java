@@ -8,7 +8,6 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.lucene.index.Term;
 
 public class Query {
 	private static Log log = LogFactory.getLog(Query.class);
@@ -20,14 +19,6 @@ public class Query {
 	
 	public Query(String queryString) {
 		this.setString(queryString);
-	}
-	public Query(Term[] termsInOrder) {
-		myQueryString = "";
-		for (Term t : termsInOrder) {
-			myQueryString += (t.text() + " ");
-		}
-		myQueryString = myQueryString.trim();
-		this.setString(myQueryString);
 	}
 	
 	public Resultset execute(int numResults) {

@@ -1,5 +1,11 @@
 package coms6111.proj2;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,5 +54,18 @@ public class ContentSummary {
 	
 	public String getDatabaseName() {
 		return databaseName;
+	}
+	
+	public void printAlphabeticalOrder(OutputStream outstream) {
+		Writer out = new BufferedWriter(new OutputStreamWriter(outstream));
+		String[] termStrings = docFreqs.keySet().toArray(new String[0]);
+		Arrays.sort(termStrings);
+		for (String termString : termStrings) {
+			try {
+				out.write(termString + " " + docFreqs.get(termString) + "\n");
+			} catch (IOException e) {
+				log.error("Error writing content summary", e);
+			}
+		}
 	}
 }
