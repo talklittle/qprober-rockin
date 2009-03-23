@@ -3,11 +3,11 @@ package coms6111.proj2;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,21 +16,22 @@ public class DocumentSampler {
 	private static Log log = LogFactory.getLog(DocumentSampler.class);
 	
 	// Times to retry a query if it fails
-	public final int maxRetries = 5;
-	public final int topN = 4;
-	public final int queryDelayTimeMillis = 5000;
+	public static final int maxRetries = 5;
+	public static final int topN = 4;
+	public static final int queryDelayTimeMillis = 5000;
 	
-	// TODO
-	public DocumentSampler() {
-		
-	}
-	
-	public Set<String> getQueriesToSample(List<String> categories,
-			HashMap<String, List<String>> associatedQueries) {
-		HashSet<String> returnMe = new HashSet<String>();
+	/**
+	 * Get a list of unique queries from the specified Collection of categories
+	 * @param categories The categories you want to get queries from
+	 * @param classificationNodes The Map of category names to representative nodes
+	 * @return A Set of queries associated with the categories
+	 */
+	public static Set<String> getQueriesToSample(Collection<String> categories,
+			Map<String, ClassificationNode> classificationNodes) {
+		TreeSet<String> returnMe = new TreeSet<String>();
 		
 		for (String category : categories) {
-			returnMe.addAll(associatedQueries.get(category));
+			returnMe.addAll(classificationNodes.get(category).getQueries());
 		}
 		
 		return returnMe; 
@@ -42,7 +43,7 @@ public class DocumentSampler {
 	 * @param queries Set of query Strings
 	 * @return Single large Resultset with unique results
 	 */
-	public Resultset sample(URL database, Set<String> queries) {
+	public static Resultset sample(URL database, Set<String> queries) {
 		ArrayList<Resultset> resultsetList = new ArrayList<Resultset>();
 		int retries;
 		
@@ -87,9 +88,8 @@ public class DocumentSampler {
 	 * @param rsList A Collection of Resultsets
 	 * @return A new Resultset containing unique Results
 	 */
-	public Resultset combineResultsets(Collection<Resultset> rsList) {
+	public static Resultset combineResultsets(Collection<Resultset> rsList) {
 		HashSet<Result> rsSet = new HashSet<Result>();
-		
 		for (Resultset rs : rsList) {
 			for (Iterator<Result> it = rs.iterator(); it.hasNext(); ) {
 				Result r = it.next();
