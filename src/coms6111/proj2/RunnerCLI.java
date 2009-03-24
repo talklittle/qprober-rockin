@@ -121,6 +121,16 @@ public class RunnerCLI {
 //			log.debug("--");
 //		}
 		
+		Classify.cTable = classificationNodes;
+		try {
+			String category = Classify.ClassifyDatabase("diabetes.org");
+			log.info("Category: " + category);
+		} catch (Exception e) {
+			log.error("Error classifying database");
+		}
+		// FIXME
+		System.exit(0);
+		
 		// XXX DEBUG
 		TreeSet<String> categories = new TreeSet<String>();
 		categories.add("Root");

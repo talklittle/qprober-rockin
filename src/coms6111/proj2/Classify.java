@@ -20,32 +20,32 @@ public class Classify {
 		int tec=100;
 		double tes=0.6;
 		String result="";
-		if ((GetECoverage(website)[0][0]>=tec)&(GetESpecificity(website)[0][0]>=tes)){
-			if((GetECoverage(website)[1][0]>=tec)&(GetESpecificity(website)[1][0]>=tes)){
+		if ((GetECoverage(website)[0][0]>=tec)&&(GetESpecificity(website)[0][0]>=tes)){
+			if((GetECoverage(website)[1][0]>=tec)&&(GetESpecificity(website)[1][0]>=tes)){
 				result="Root/Computers/Hardware";
 			}
-			else if((GetECoverage(website)[1][1]>=tec)&(GetESpecificity(website)[1][1]>=tes)){
+			else if((GetECoverage(website)[1][1]>=tec)&&(GetESpecificity(website)[1][1]>=tes)){
 				result="Root/Computers/Programming";
 			}
 			else
 				result="Root/Computers";
 				
 		}
-		else if ((GetECoverage(website)[0][1]>=tec)&(GetESpecificity(website)[0][1]>=tes)){
-			if((GetECoverage(website)[2][0]>=tec)&(GetESpecificity(website)[2][0]>=tes)){
+		else if ((GetECoverage(website)[0][1]>=tec)&&(GetESpecificity(website)[0][1]>=tes)){
+			if((GetECoverage(website)[2][0]>=tec)&&(GetESpecificity(website)[2][0]>=tes)){
 				result="Root/Health/Fitness";
 			}
-			else if((GetECoverage(website)[2][1]>=tec)&(GetESpecificity(website)[2][1]>=tes)){
+			else if((GetECoverage(website)[2][1]>=tec)&&(GetESpecificity(website)[2][1]>=tes)){
 				result="Root/Health/Diseases";
 			}
 			else
 				result="Root/Health";
 		}
-		else if ((GetECoverage(website)[0][2]>=tec)&(GetESpecificity(website)[0][2]>=tes)){
-			if((GetECoverage(website)[3][0]>=tec)&(GetESpecificity(website)[3][0]>=tes)){
+		else if ((GetECoverage(website)[0][2]>=tec)&&(GetESpecificity(website)[0][2]>=tes)){
+			if((GetECoverage(website)[3][0]>=tec)&&(GetESpecificity(website)[3][0]>=tes)){
 				result="Root/Sports/Basketball";
 			}
-			else if((GetECoverage(website)[3][1]>=tec)&(GetESpecificity(website)[3][1]>=tes)){
+			else if((GetECoverage(website)[3][1]>=tec)&&(GetESpecificity(website)[3][1]>=tes)){
 				result="Root/Sports/Soccer";
 			}
 			else
@@ -158,8 +158,8 @@ public static int NumberMatch(String query, String database){
 		InputStream in=new DataInputStream(connection.getInputStream());
 		Document response = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
         NodeList list=response.getElementsByTagName("resultset_web");
-		String out=((Element)list.item(0)).getAttribute("TotalMatchNum");
-		EachMatchNum=Integer.parseInt(out); 	
+		String out=((Element)list.item(0)).getAttribute("totalhits");
+		EachMatchNum=Integer.parseInt(out);
 		System.out.println(EachMatchNum);
 		return EachMatchNum;
 	}
