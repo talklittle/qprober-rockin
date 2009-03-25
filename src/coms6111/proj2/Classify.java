@@ -29,7 +29,7 @@ public class Classify {
 		double tes=0.6;
 		String result="";
 		for(String category:hierarchy.get(allCategory)){
-			int coverage=GetECoverage(website,category);
+			double coverage=GetECoverage(website,category);
 			double specificity=GetESpecificity(website,category);
 			if ((coverage>=tec)&&(specificity>=tes)){
 				result="Root"+category+""+ClassifyDatabase(website,category);
@@ -51,7 +51,7 @@ public class Classify {
 		System.out.println(result);
 		return result;
 		}
-	public static int GetECoverage(String database,String Category){
+	public static double GetECoverage(String database,String Category){
 		String website=database;
 		String categ=Category;
 		int TotalMatchNum=0;
@@ -131,16 +131,16 @@ public class Classify {
 public static double GetESpecificity(String database,String Category){
 	String website=database;
 	String categ=Category;
-	double specificity=0;
-	int computerCoverage=GetECoverage(website,categ);
-	int healthCoverage=GetECoverage(website,categ);
-	int sportsCoverage=GetECoverage(website,categ);
-	int hardwareCoverage=GetECoverage(website,categ);
-	int programmingCoverage=GetECoverage(website,categ);
-	int fitnessCoverage=GetECoverage(website,categ);
-	int diseaseCoverage=GetECoverage(website,categ);
-	int basketballCoverage=GetECoverage(website,categ);
-	int soccerCoverage=GetECoverage(website,categ);
+	double specificity=0.0;
+	double computerCoverage=GetECoverage(website,"Computers");
+    double healthCoverage=GetECoverage(website,"Health");
+	double sportsCoverage=GetECoverage(website,"Sports");
+	double hardwareCoverage=GetECoverage(website,"Hardware");
+	double programmingCoverage=GetECoverage(website,"Programming");
+	double fitnessCoverage=GetECoverage(website,"Fitness");
+	double diseaseCoverage=GetECoverage(website,"Disearses");
+	double basketballCoverage=GetECoverage(website,"Basketball");
+	double soccerCoverage=GetECoverage(website,"Soccer");
 	if (categ.equals("Computers")){
 		specificity=computerCoverage/(computerCoverage+healthCoverage+sportsCoverage);
 		}
