@@ -38,7 +38,7 @@ public class Classify {
 			double coverage=GetECoverage(website,category);
 			double specificity=GetESpecificity(website,category);
 			if ((coverage>=tec)&&(specificity>=tes)){
-				result=category+""+ClassifyDatabase(website,category);
+				result=category+"/"+ClassifyDatabase(website,category);
 				//for(String subCategory : hierarchy.get(category)){
 					//int coverage1=GetECoverage(website,subCategory);
 					//double specificity1=GetESpecificity(website,subCategory);
@@ -144,7 +144,7 @@ public static double GetESpecificity(String database,String Category){
 	double hardwareCoverage=GetECoverage(website,"Hardware");
 	double programmingCoverage=GetECoverage(website,"Programming");
 	double fitnessCoverage=GetECoverage(website,"Fitness");
-	double diseaseCoverage=GetECoverage(website,"Disearses");
+	double diseaseCoverage=GetECoverage(website,"Diseases");
 	double basketballCoverage=GetECoverage(website,"Basketball");
 	double soccerCoverage=GetECoverage(website,"Soccer");
 	if (categ.equals("Computers")){
