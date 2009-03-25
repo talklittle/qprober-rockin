@@ -123,7 +123,12 @@ public class RunnerCLI {
 		
 		Classify.cTable = classificationNodes;
 		try {
-			String category = Classify.ClassifyDatabase("diabetes.org");
+			HashMap<String, String[]> hierarchy = new HashMap<String, String[]>();
+			hierarchy.put("Root",new String[]{"Computers","Health","Sports"});
+			hierarchy.put("Computers", new String[]{"Hardware","Programming"});
+			hierarchy.put("Health",new String[]{"Fitness","Diseases"});
+			hierarchy.put("Sports", new String[]{"Basketball","Soccer"});
+			String category = Classify.ClassifyDatabase("java.sun.com","Root");
 			log.info("Category: " + category);
 		} catch (Exception e) {
 			log.error("Error classifying database", e);
