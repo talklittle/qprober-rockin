@@ -23,6 +23,12 @@ public class Classify {
 		hierarchy.put("Computers", new String[]{"Hardware","Programming"});
 		hierarchy.put("Health",new String[]{"Fitness","Diseases"});
 		hierarchy.put("Sports", new String[]{"Basketball","Soccer"});
+		hierarchy.put("Hardware",new String[0]);
+		hierarchy.put("Programming",new String[0]);
+		hierarchy.put("Fitness",new String[0]);
+		hierarchy.put("Diseases",new String[0]);
+		hierarchy.put("Basketball",new String[0]);
+		hierarchy.put("Soccer",new String[0]);
 		String website=database;
 		String allCategory=root;
 		int tec=100;
@@ -32,7 +38,7 @@ public class Classify {
 			double coverage=GetECoverage(website,category);
 			double specificity=GetESpecificity(website,category);
 			if ((coverage>=tec)&&(specificity>=tes)){
-				result="Root"+category+""+ClassifyDatabase(website,category);
+				result=category+""+ClassifyDatabase(website,category);
 				//for(String subCategory : hierarchy.get(category)){
 					//int coverage1=GetECoverage(website,subCategory);
 					//double specificity1=GetESpecificity(website,subCategory);
