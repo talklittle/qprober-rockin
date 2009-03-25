@@ -126,7 +126,7 @@ public class RunnerCLI {
 			String category = Classify.ClassifyDatabase("diabetes.org");
 			log.info("Category: " + category);
 		} catch (Exception e) {
-			log.error("Error classifying database");
+			log.error("Error classifying database", e);
 		}
 		// FIXME
 		System.exit(0);
