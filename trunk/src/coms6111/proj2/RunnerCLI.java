@@ -135,8 +135,8 @@ public class RunnerCLI {
 			hierarchy.put("Basketball",new String[0]);
 			hierarchy.put("Soccer",new String[0]);
 			
-			String category = Classify.ClassifyDatabase("java.sun.com","Root");
-			log.info("Category:Root " + category);
+			String category = Classify.ClassifyDatabase("NBA.com","Root");
+			log.info("Category:Root/" + category);
 		} catch (Exception e) {
 			log.error("Error classifying database", e);
 		}
