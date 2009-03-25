@@ -6,12 +6,16 @@ import java.net.*;
 
 import javax.xml.parsers.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class Classify {
+	
+	protected static final Log log = LogFactory.getLog(Classify.class);
 	
 	public static HashMap<String, ClassificationNode> cTable;
 	
@@ -20,6 +24,8 @@ public class Classify {
 		int tec=100;
 		double tes=0.6;
 		String result="";
+		
+		log.debug("Before GetECoverage");
 		if ((GetECoverage(website)[0][0]>=tec)&&(GetESpecificity(website)[0][0]>=tes)){
 			if((GetECoverage(website)[1][0]>=tec)&&(GetESpecificity(website)[1][0]>=tes)){
 				result="Root/Computers/Hardware";
@@ -78,11 +84,14 @@ public class Classify {
 		ClassificationNode healthNode = cTable.get("Health");
 		ClassificationNode sportsNode = cTable.get("Sports");
 	for (String queryStr : rootNode.getQueries()) {
+		//log.debug("Before rootNode.getChildByQuery");
 		if(rootNode.getChildByQuery(queryStr).getName().equals("Computers")){
+			//log.debug("Before getTotalMatchNum of Computers");
 			TotalMatchNum=TotalMatchNum+NumberMatch(queryStr,website);
 			FirstMatch[0]=TotalMatchNum;
 			for (String queryString : computerNode.getQueries()){
 				if (computerNode.getChildByQuery(queryString).getName().equals("Hardware")){
+					//log.debug("Before get totallist of Hardware");
 					TotalList=TotalList+NumberMatch(queryString,website);
 					SecondMatchCom[0]= TotalList;
 				}
@@ -95,6 +104,7 @@ public class Classify {
 		else if (rootNode.getChildByQuery(queryStr).getName().equals("Health")){
 			TotalMatchNum=TotalMatchNum+NumberMatch(queryStr,website);
 			FirstMatch[1]=TotalMatchNum;
+			//log.debug("Before healthNode.getQueries");
 			for (String queryString : healthNode.getQueries()){
 				if (healthNode.getChildByQuery(queryString).getName().equals("Fitness")){
 					TotalList=TotalList+NumberMatch(queryString,website);
@@ -112,11 +122,11 @@ public class Classify {
 			TotalMatchNum=TotalMatchNum+NumberMatch(queryStr,website);
 			FirstMatch[2]=TotalMatchNum;
 			for (String queryString : sportsNode.getQueries()){
-				if (sportsNode.getChildByQuery(queryString).getName().equals("Hardware")){
+				if (sportsNode.getChildByQuery(queryString).getName().equals("Basketball")){
 					TotalList=TotalList+NumberMatch(queryString,website);
 					SecondMatchSport[0]= TotalList;
 				}
-				else if (healthNode.getChildByQuery(queryString).getName().equals("Programming")){
+				else if (sportsNode.getChildByQuery(queryString).getName().equals("Soccer")){
 					TotalList=TotalList+NumberMatch(queryString,website);
 					SecondMatchSport[1]= TotalList;
 				
