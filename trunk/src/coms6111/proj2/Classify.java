@@ -16,145 +16,159 @@ import java.util.HashMap;
 public class Classify {
 	
 	protected static final Log log = LogFactory.getLog(Classify.class);
-	
 	public static HashMap<String, ClassificationNode> cTable;
-	
-	public static String ClassifyDatabase(String database)throws Exception{
+	public static String ClassifyDatabase(String database,String root)throws Exception{
+		HashMap<String, String[]> hierarchy = new HashMap<String, String[]>();
+		hierarchy.put("Root",new String[]{"Computers","Health","Sports"});
+		hierarchy.put("Computers", new String[]{"Hardware","Programming"});
+		hierarchy.put("Health",new String[]{"Fitness","Diseases"});
+		hierarchy.put("Sports", new String[]{"Basketball","Soccer"});
 		String website=database;
+		String allCategory=root;
 		int tec=100;
 		double tes=0.6;
 		String result="";
-		
-		log.debug("Before GetECoverage");
-		if ((GetECoverage(website)[0][0]>=tec)&&(GetESpecificity(website)[0][0]>=tes)){
-			if((GetECoverage(website)[1][0]>=tec)&&(GetESpecificity(website)[1][0]>=tes)){
-				result="Root/Computers/Hardware";
+		for(String category:hierarchy.get(allCategory)){
+			int coverage=GetECoverage(website,category);
+			double specificity=GetESpecificity(website,category);
+			if ((coverage>=tec)&&(specificity>=tes)){
+				result="Root"+category+""+ClassifyDatabase(website,category);
+				//for(String subCategory : hierarchy.get(category)){
+					//int coverage1=GetECoverage(website,subCategory);
+					//double specificity1=GetESpecificity(website,subCategory);
+					//if((coverage1>=tec)&&(specificity1>=tes)){
+						//result=category+""+subCategory;
+					//}
+					//else{
+						//result=category;
+					//}
+					
+					
+				//}
+				//result=result+" "+ClassifyDatabase(website,hierarchy.get(category));
 			}
-			else if((GetECoverage(website)[1][1]>=tec)&&(GetESpecificity(website)[1][1]>=tes)){
-				result="Root/Computers/Programming";
 			}
-			else
-				result="Root/Computers";
-				
-		}
-		else if ((GetECoverage(website)[0][1]>=tec)&&(GetESpecificity(website)[0][1]>=tes)){
-			if((GetECoverage(website)[2][0]>=tec)&&(GetESpecificity(website)[2][0]>=tes)){
-				result="Root/Health/Fitness";
-			}
-			else if((GetECoverage(website)[2][1]>=tec)&&(GetESpecificity(website)[2][1]>=tes)){
-				result="Root/Health/Diseases";
-			}
-			else
-				result="Root/Health";
-		}
-		else if ((GetECoverage(website)[0][2]>=tec)&&(GetESpecificity(website)[0][2]>=tes)){
-			if((GetECoverage(website)[3][0]>=tec)&&(GetESpecificity(website)[3][0]>=tes)){
-				result="Root/Sports/Basketball";
-			}
-			else if((GetECoverage(website)[3][1]>=tec)&&(GetESpecificity(website)[3][1]>=tes)){
-				result="Root/Sports/Soccer";
-			}
-			else
-				result="Root/Sports";
-		}
-		else
-			result="Root";
+		System.out.println(result);
 		return result;
-		
-		
-		
-		
-		
-		
-	}
-	public static int[][] GetECoverage(String database){
+		}
+	public static int GetECoverage(String database,String Category){
 		String website=database;
-		int FirstMatch[]= new int [3];
-		int SecondMatchCom[]= new int [2];
-		int SecondMatchHeal[]= new int [2];
-		int SecondMatchSport[] = new int [2];
-		Arrays.fill(FirstMatch,0);
-		Arrays.fill(SecondMatchCom,0);
-		Arrays.fill(SecondMatchHeal, 0);
-		Arrays.fill(SecondMatchSport,0);
+		String categ=Category;
 		int TotalMatchNum=0;
-		int TotalList=0;
 		ClassificationNode rootNode = cTable.get("Root");
 		ClassificationNode computerNode = cTable.get("Computers");
 		ClassificationNode healthNode = cTable.get("Health");
 		ClassificationNode sportsNode = cTable.get("Sports");
-	for (String queryStr : rootNode.getQueries()) {
-		//log.debug("Before rootNode.getChildByQuery");
-		if(rootNode.getChildByQuery(queryStr).getName().equals("Computers")){
-			//log.debug("Before getTotalMatchNum of Computers");
-			TotalMatchNum=TotalMatchNum+NumberMatch(queryStr,website);
-			FirstMatch[0]=TotalMatchNum;
+		if(categ.equals("Computers")){
+			for(String queryStr : rootNode.getQueries()){
+				if(rootNode.getChildByQuery(queryStr).getName().equals("Computers")){
+					TotalMatchNum=TotalMatchNum+NumberMatch(queryStr,website);         
+					}
+			}
+		}
+		else if (categ.equals("Health")){
+			for(String queryStr : rootNode.getQueries()){
+				if(rootNode.getChildByQuery(queryStr).getName().equals("Health")){
+					TotalMatchNum=TotalMatchNum+NumberMatch(queryStr,website);
+				}
+			}
+		}
+		else if (categ.equals("Sports")){
+			for(String queryStr : rootNode.getQueries()){
+				if(rootNode.getChildByQuery(queryStr).getName().equals("Sports")){
+					TotalMatchNum=TotalMatchNum+NumberMatch(queryStr,website);
+				}
+			}
+		}
+		else if (categ.equals("Hardware")){
 			for (String queryString : computerNode.getQueries()){
 				if (computerNode.getChildByQuery(queryString).getName().equals("Hardware")){
-					//log.debug("Before get totallist of Hardware");
-					TotalList=TotalList+NumberMatch(queryString,website);
-					SecondMatchCom[0]= TotalList;
-				}
-				else if (computerNode.getChildByQuery(queryString).getName().equals("Programming")){
-					TotalList=TotalList+NumberMatch(queryString,website);
-					SecondMatchCom[1]= TotalList;
+					TotalMatchNum=TotalMatchNum+NumberMatch(queryString,website);
 				}
 			}
+		}
+		else if (categ.equals("Programming")){
+			for (String queryString : computerNode.getQueries()){
+				if (computerNode.getChildByQuery(queryString).getName().equals("Programming")){
+					TotalMatchNum=TotalMatchNum+NumberMatch(queryString,website);
+				}
 			}
-		else if (rootNode.getChildByQuery(queryStr).getName().equals("Health")){
-			TotalMatchNum=TotalMatchNum+NumberMatch(queryStr,website);
-			FirstMatch[1]=TotalMatchNum;
-			//log.debug("Before healthNode.getQueries");
+			
+		}
+		else if (categ.equals("Fitness")){
 			for (String queryString : healthNode.getQueries()){
 				if (healthNode.getChildByQuery(queryString).getName().equals("Fitness")){
-					TotalList=TotalList+NumberMatch(queryString,website);
-					SecondMatchHeal[0]= TotalList;
-					
-				}
-				else if (healthNode.getChildByQuery(queryString).getName().equals("Diseases")){
-					TotalList=TotalList+NumberMatch(queryString,website);
-					SecondMatchHeal[1]= TotalList;
-					
+					TotalMatchNum=TotalMatchNum+NumberMatch(queryString,website);
 				}
 			}
 		}
-		else if (rootNode.getChildByQuery(queryStr).getName().equals("Sports")){
-			TotalMatchNum=TotalMatchNum+NumberMatch(queryStr,website);
-			FirstMatch[2]=TotalMatchNum;
+		else if (categ.equals("Diseases")){
+			for (String queryString : healthNode.getQueries()){
+				if (healthNode.getChildByQuery(queryString).getName().equals("Diseases")){
+					TotalMatchNum=TotalMatchNum+NumberMatch(queryString,website);
+				}
+			}
+		}
+		else if (categ.equals("Basketball")){
 			for (String queryString : sportsNode.getQueries()){
 				if (sportsNode.getChildByQuery(queryString).getName().equals("Basketball")){
-					TotalList=TotalList+NumberMatch(queryString,website);
-					SecondMatchSport[0]= TotalList;
-				}
-				else if (sportsNode.getChildByQuery(queryString).getName().equals("Soccer")){
-					TotalList=TotalList+NumberMatch(queryString,website);
-					SecondMatchSport[1]= TotalList;
-				
+					TotalMatchNum=TotalMatchNum+NumberMatch(queryString,website);
 				}
 			}
-	
 		}
+		else if (categ.equals("Soccer")){
+			for (String queryString : sportsNode.getQueries()){
+				if (sportsNode.getChildByQuery(queryString).getName().equals("Soccer")){
+					TotalMatchNum=TotalMatchNum+NumberMatch(queryString,website);
+				}
+			}
 		}
-	return new int[][]{FirstMatch,SecondMatchCom,SecondMatchHeal,SecondMatchSport};
+		return TotalMatchNum;
+		//return new int[][]{FirstMatch,SecondMatchCom,SecondMatchHeal,SecondMatchSport};
 	
 	
 }
-public static double[][] GetESpecificity(String database){
+public static double GetESpecificity(String database,String Category){
 	String website=database;
-	double Specificity []= new double [3];
-	double SpecificityCom []= new double [2];
-	double SpecificityHeal []= new double [2];
-	double SpecificitySport []= new double [2];
-	Specificity [0]= GetECoverage(website)[0][0]/GetECoverage(website)[0][0]+GetECoverage(website)[0][1]+GetECoverage(website)[0][2];
-	Specificity [1]= GetECoverage(website)[0][1]/GetECoverage(website)[0][0]+GetECoverage(website)[0][1]+GetECoverage(website)[0][2];
-	Specificity [2]= GetECoverage(website)[0][2]/GetECoverage(website)[0][0]+GetECoverage(website)[0][1]+GetECoverage(website)[0][2];
-	SpecificityCom [0]=GetECoverage(website)[1][0]/GetECoverage(website)[1][0]+GetECoverage(website)[1][1];
-	SpecificityCom [1]=GetECoverage(website)[1][1]/GetECoverage(website)[1][0]+GetECoverage(website)[1][1];
-	SpecificityHeal [0]=GetECoverage(website)[2][0]/GetECoverage(website)[2][0]+GetECoverage(website)[2][1];
-	SpecificityHeal [1]= GetECoverage(website)[2][1]/GetECoverage(website)[2][0]+GetECoverage(website)[2][1];
-	SpecificitySport [0]=GetECoverage(website)[3][0]/GetECoverage(website)[3][0]+GetECoverage(website)[3][1];
-	SpecificitySport [0]=GetECoverage(website)[3][1]/GetECoverage(website)[3][0]+GetECoverage(website)[3][1];
-	return new double [][]{Specificity,SpecificityCom,SpecificityHeal,SpecificitySport};
+	String categ=Category;
+	double specificity=0;
+	int computerCoverage=GetECoverage(website,categ);
+	int healthCoverage=GetECoverage(website,categ);
+	int sportsCoverage=GetECoverage(website,categ);
+	int hardwareCoverage=GetECoverage(website,categ);
+	int programmingCoverage=GetECoverage(website,categ);
+	int fitnessCoverage=GetECoverage(website,categ);
+	int diseaseCoverage=GetECoverage(website,categ);
+	int basketballCoverage=GetECoverage(website,categ);
+	int soccerCoverage=GetECoverage(website,categ);
+	if (categ.equals("Computers")){
+		specificity=computerCoverage/(computerCoverage+healthCoverage+sportsCoverage);
+		}
+	else if (categ.equals("Health")){
+		specificity=healthCoverage/(computerCoverage+healthCoverage+sportsCoverage);
+	}
+	else if (categ.equals("Sports")){
+		specificity=sportsCoverage/(computerCoverage+healthCoverage+sportsCoverage);
+	}
+	else if (categ.equals("Hardware")){
+		specificity=hardwareCoverage/(hardwareCoverage+programmingCoverage);
+	}
+	else if (categ.equals("Programming")){
+		specificity=programmingCoverage/(hardwareCoverage+programmingCoverage);
+	}
+	else if (categ.equals("Basketball")){
+		specificity=basketballCoverage/(basketballCoverage+soccerCoverage);
+	}
+	else if (categ.equals("Soccer")){
+		specificity=soccerCoverage/(basketballCoverage+soccerCoverage);
+	}
+	else if (categ.equals("Fitness")){
+		specificity=fitnessCoverage/(fitnessCoverage+diseaseCoverage);
+	}
+	else if (categ.equals("Diseases")){
+		specificity=diseaseCoverage/(fitnessCoverage+diseaseCoverage);
+	}
+	return specificity;
 }
 
 
@@ -170,7 +184,7 @@ public static int NumberMatch(String query, String database){
         NodeList list=response.getElementsByTagName("resultset_web");
 		String out=((Element)list.item(0)).getAttribute("totalhits");
 		EachMatchNum=Integer.parseInt(out);
-		System.out.println(EachMatchNum);
+		//System.out.println(EachMatchNum);
 		return EachMatchNum;
 	}
 	catch(Exception e) {
