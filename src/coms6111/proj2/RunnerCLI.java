@@ -128,8 +128,15 @@ public class RunnerCLI {
 			hierarchy.put("Computers", new String[]{"Hardware","Programming"});
 			hierarchy.put("Health",new String[]{"Fitness","Diseases"});
 			hierarchy.put("Sports", new String[]{"Basketball","Soccer"});
+			hierarchy.put("Hardware",new String[0]);
+			hierarchy.put("Programming",new String[0]);
+			hierarchy.put("Fitness",new String[0]);
+			hierarchy.put("Diseases",new String[0]);
+			hierarchy.put("Basketball",new String[0]);
+			hierarchy.put("Soccer",new String[0]);
+			
 			String category = Classify.ClassifyDatabase("java.sun.com","Root");
-			log.info("Category: " + category);
+			log.info("Category:Root " + category);
 		} catch (Exception e) {
 			log.error("Error classifying database", e);
 		}
