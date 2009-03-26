@@ -19,6 +19,7 @@ public class Resultset {
 	
 	private List<Result> myResults;
 	private int resultSize;
+	private double totalHits = -1;
 	
 	public Resultset(Collection<Result> results) {
 		myResults = new ArrayList<Result>(results);
@@ -37,6 +38,8 @@ public class Resultset {
 		XPathFactory factory = XPathFactory.newInstance();
 		XPath xPath=factory.newXPath();
 
+		totalHits = (Double)xPath.evaluate("/ysearchresponse/resultset_web/@totalhits", response, XPathConstants.NUMBER);
+		
 		//Get all search Result nodes
 		NodeList nodes = (NodeList)xPath.evaluate("/ysearchresponse/resultset_web/result", response, XPathConstants.NODESET);
 		int nodeCount = nodes.getLength();
@@ -50,11 +53,11 @@ public class Resultset {
 			String summary = (String)xPath.evaluate("abstract", nodes.item(i), XPathConstants.STRING);
 			String url = (String)xPath.evaluate("url", nodes.item(i), XPathConstants.STRING);
 			//print out the Title, Summary, and URL for each search result
-			log.info("-- Result " + (i+1));
-			log.info("Title: " + title);
-			log.info("Summary: " + summary);
-			log.info("URL: " + url);
-			log.info("--");
+//			log.info("-- Result " + (i+1));
+//			log.info("Title: " + title);
+//			log.info("Summary: " + summary);
+//			log.info("URL: " + url);
+//			log.info("--");
 			
 			myResults.add(new Result(title, summary, url));
 			resultSize++;
@@ -82,5 +85,14 @@ public class Resultset {
 	 */
 	public int getSize() {
 		return resultSize;
+	}
+	
+	/**
+	 * Return the number of total hits from the query.
+	 * This is greater than or equal to resultSize from getSize()
+	 * @return number of total hits from the query
+	 */
+	public double getTotalHits() {
+		return totalHits;
 	}
 }
