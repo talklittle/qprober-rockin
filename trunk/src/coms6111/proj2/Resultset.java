@@ -29,6 +29,15 @@ public class Resultset {
 			resultSize = 0;
 	}
 	
+	public Resultset(Collection<Result> results, double totalHitsInDb) {
+		myResults = new ArrayList<Result>(results);
+		if (results != null)
+			resultSize = results.size();
+		else
+			resultSize = 0;
+		totalHits = totalHitsInDb;
+	}
+	
 	/**
 	 * Constructor using input stream returned from HttpClient
 	 */
@@ -56,7 +65,7 @@ public class Resultset {
 //			log.info("-- Result " + (i+1));
 //			log.info("Title: " + title);
 //			log.info("Summary: " + summary);
-//			log.info("URL: " + url);
+			log.info("URL: " + url);
 //			log.info("--");
 			
 			myResults.add(new Result(title, summary, url));
