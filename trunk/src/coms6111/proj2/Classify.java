@@ -30,15 +30,28 @@ public class Classify {
 		hierarchy.put("Basketball",new String[0]);
 		hierarchy.put("Soccer",new String[0]);
 		String website=database;
-		String allCategory=root;
+		String allCategory;
+		// Categories are stored in hierarchy table as name of final path component
+		// e.g., "Basketball" instead of "Root/Sports/Basketball"
+		if (root.indexOf('/') != -1) {
+			allCategory = root.substring(root.lastIndexOf('/')+1);
+		} else {
+			allCategory = root;
+		}
 		int tec=100;
 		double tes=0.6;
 		String result="";
 		for(String category:hierarchy.get(allCategory)){
 			double coverage=GetECoverage(website,category);
 			double specificity=GetESpecificity(website,category);
+			log.debug("category " + category + " coverage " + coverage + " specificity " + specificity);
 			if ((coverage>=tec)&&(specificity>=tes)){
-				result=category+"/"+ClassifyDatabase(website,category);
+				String subclassify = ClassifyDatabase(website, root+"/"+category);
+				if (subclassify.length() > 0) {
+					result += subclassify + " ";
+				} else {
+					result += root+"/"+category + " ";
+				}
 				//for(String subCategory : hierarchy.get(category)){
 					//int coverage1=GetECoverage(website,subCategory);
 					//double specificity1=GetESpecificity(website,subCategory);
@@ -52,10 +65,16 @@ public class Classify {
 					
 				//}
 				//result=result+" "+ClassifyDatabase(website,hierarchy.get(category));
+			} else {
+				log.debug("coverage and specificity below threshold for " + root+"/"+category);
 			}
-			}
-		System.out.println(result);
-		return result;
+		}
+//		System.out.println(result);
+		if (result.length() > 0)
+			log.debug("ClassifyDatabase(" + database + ", " + root + ") = " + result);
+		else
+			log.debug("ClassifyDatabase(" + database + ", " + root + ") = NIL");
+		return result.trim();
 		}
 	public static double GetECoverage(String database,String Category){
 		String website=database;
