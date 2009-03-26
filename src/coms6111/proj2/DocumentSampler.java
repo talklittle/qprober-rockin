@@ -85,6 +85,18 @@ public class DocumentSampler {
 	}
 	
 	/**
+	 * Do sampling on a single query
+	 * @param database URL of database to sample
+	 * @param query A query to give
+	 * @return Single large Resultset with unique results
+	 */
+	public static Resultset sampleSingle(URL database, String query) {
+		Set<String> qset = new TreeSet<String>();
+		qset.add(query);
+		return sample(database, qset);
+	}
+	
+	/**
 	 * Create a new Resultset containing unique Results from
 	 * the Resultsets in the list
 	 * @param rsList A Collection of Resultsets
@@ -92,13 +104,15 @@ public class DocumentSampler {
 	 */
 	public static Resultset combineResultsets(Collection<Resultset> rsList) {
 		HashSet<Result> rsSet = new HashSet<Result>();
+		double totalMatches = 0;
 		for (Resultset rs : rsList) {
 			for (Iterator<Result> it = rs.iterator(); it.hasNext(); ) {
 				Result r = it.next();
 				rsSet.add(r);
 			}
+			totalMatches += rs.getTotalHits();
 		}
-		return new Resultset(rsSet);
+		return new Resultset(rsSet, totalMatches);
 	}
 	
 	

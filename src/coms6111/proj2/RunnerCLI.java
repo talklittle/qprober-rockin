@@ -1,11 +1,7 @@
 package coms6111.proj2;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -135,28 +131,27 @@ public class RunnerCLI {
 			hierarchy.put("Basketball",new String[0]);
 			hierarchy.put("Soccer",new String[0]);
 			
-			String category = Classify.ClassifyDatabase("NBA.com","Root");
+			Classify.init();
+			String category = Classify.ClassifyDatabase("NBA.com","Root", 100, 0.6);
 			log.info("Category: " + category);
 		} catch (Exception e) {
 			log.error("Error classifying database", e);
 		}
-		// FIXME
-		System.exit(0);
 		
-		// XXX DEBUG
-		TreeSet<String> categories = new TreeSet<String>();
-		categories.add("Root");
-		categories.add("Health");
-		Set<String> queries = DocumentSampler.getQueriesToSample(categories, classificationNodes);
-		URL site = null;
-		try {
-			site = new URL("http://diabetes.org");
-		} catch (MalformedURLException e) {
-			log.error("Bad url", e);
-			System.exit(0);
-		}
-		Resultset rs = DocumentSampler.sample(site, queries);
-		ContentSummary cs = ContentSummaryConstructor.construct("http://diabetes.org", rs);
-		cs.printAlphabeticalOrder(System.out);
+//		// DEBUG
+//		TreeSet<String> categories = new TreeSet<String>();
+//		categories.add("Root");
+//		categories.add("Health");
+//		Set<String> queries = DocumentSampler.getQueriesToSample(categories, classificationNodes);
+//		URL site = null;
+//		try {
+//			site = new URL("http://diabetes.org");
+//		} catch (MalformedURLException e) {
+//			log.error("Bad url", e);
+//			System.exit(0);
+//		}
+//		Resultset rs = DocumentSampler.sample(site, queries);
+//		ContentSummary cs = ContentSummaryConstructor.construct("http://diabetes.org", rs);
+//		cs.printAlphabeticalOrder(System.out);
 	}
 }
