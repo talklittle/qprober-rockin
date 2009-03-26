@@ -1,6 +1,7 @@
 package coms6111.proj2;
 
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.*;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -48,7 +49,7 @@ public class Query {
 //	    	log.warn("No sites provided to Yahoo! query");
 //	    }
 //
-	    log.debug(request);
+//	    log.debug(request);
 	    // Send HTTP request
 	    try {
 	    	int statusCode = client.executeMethod(method);
@@ -74,7 +75,7 @@ public class Query {
 	    try {
 	    	return new Resultset(rstream);
 	    } catch (Exception e) {
-	    	log.warn("Error creating Resultset from result stream");
+	    	log.warn("Error creating Resultset from result stream", e);
 	    	return null;
 	    }
 	}
@@ -95,7 +96,11 @@ public class Query {
 		myQueryStringList = new ArrayList<String>();
 		while (st.hasMoreTokens())
 			myQueryStringList.add(st.nextToken());
-		myQueryString = queryString;
+		try {
+			myQueryString = URLEncoder.encode(queryString, "UTF-8");
+		} catch (Exception e) {
+			log.error("Could not set string for new Query", e);
+		}
 	}
 	
 	/**

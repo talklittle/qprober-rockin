@@ -46,6 +46,7 @@ public class Classify {
 			double specificity=GetESpecificity(website,category);
 			log.debug("category " + category + " coverage " + coverage + " specificity " + specificity);
 			if ((coverage>=tec)&&(specificity>=tes)){
+				log.debug("coverage and specificity above threshold for " + root+"/"+category);
 				String subclassify = ClassifyDatabase(website, root+"/"+category);
 				if (subclassify.length() > 0) {
 					result += subclassify + " ";
@@ -66,7 +67,7 @@ public class Classify {
 				//}
 				//result=result+" "+ClassifyDatabase(website,hierarchy.get(category));
 			} else {
-				log.debug("coverage and specificity below threshold for " + root+"/"+category);
+//				log.debug("coverage and specificity below threshold for " + root+"/"+category);
 			}
 		}
 //		System.out.println(result);
@@ -79,7 +80,7 @@ public class Classify {
 	public static double GetECoverage(String database,String Category){
 		String website=database;
 		String categ=Category;
-		int TotalMatchNum=0;
+		double TotalMatchNum=0;
 		ClassificationNode rootNode = cTable.get("Root");
 		ClassificationNode computerNode = cTable.get("Computers");
 		ClassificationNode healthNode = cTable.get("Health");
@@ -198,28 +199,32 @@ public static double GetESpecificity(String database,String Category){
 
 
 
-public static int NumberMatch(String query, String database){
+public static double NumberMatch(String query, String database){
 	try{
-		int EachMatchNum;
-		query = URLEncoder.encode(query, "UTF-8");
-		URL url = new URL("http://boss.yahooapis.com/ysearch/web/v1/"+query+"?appid=SeJQZ5fV34F7ohb4ONiSH9bbdWH9RtbodjvH_cN_BRj9QWEgfSFLW1h.Jkj0i52LT6I-&result=10&format=xml&sites="+database);
-		URLConnection connection = url.openConnection();
-		InputStream in=new DataInputStream(connection.getInputStream());
-		Document response = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
-        NodeList list=response.getElementsByTagName("resultset_web");
-		String out=((Element)list.item(0)).getAttribute("totalhits");
-		EachMatchNum=Integer.parseInt(out);
+		Query q = new Query(query);
+		
+//		query = URLEncoder.encode(query, "UTF-8");
+//		URL url = new URL("http://boss.yahooapis.com/ysearch/web/v1/"+query+"?appid=SeJQZ5fV34F7ohb4ONiSH9bbdWH9RtbodjvH_cN_BRj9QWEgfSFLW1h.Jkj0i52LT6I-&result=10&format=xml&sites="+database);
+//		URLConnection connection = url.openConnection();
+//		InputStream in=new DataInputStream(connection.getInputStream());
+//		Document response = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
+//        NodeList list=response.getElementsByTagName("resultset_web");
+//		String out=((Element)list.item(0)).getAttribute("totalhits");
+//		EachMatchNum=Integer.parseInt(out);
 		//System.out.println(EachMatchNum);
-		return EachMatchNum;
+		
+		Resultset rs = q.execute(4, database);
+		if (rs == null)
+			return 0;
+		// TODO use the top-4 to generate Content Summary etc.
+		
+		return rs.getTotalHits();
 	}
 	catch(Exception e) {
 		System.err.println("There is a error!");
 		e.printStackTrace();
 		return 0;
 	} 
-	
-	
-	
 }
 
 }
