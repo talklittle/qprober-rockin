@@ -83,6 +83,7 @@ public class Classify {
 		String classifications = classifyDatabaseHelper(database, "Root", hierarchy, tec, tes, eCoverageTable, eSpecificityTable);
 		
 		// Create ContentSummary
+		
 		TreeSet<String> allMatchingNodes = new TreeSet<String>();
 		StringTokenizer st_space = new StringTokenizer(classifications);
 		// First use the results of classifyDatabaseHelper to figure out which nodes we want
@@ -101,9 +102,11 @@ public class Classify {
 			Set<String> branch = getBranchToSummarize(nodeToSummarize, allMatchingNodes, hierarchy);
 			HashSet<Resultset> rsSet = new HashSet<Resultset>();
 			for (String s : branch) {
+				log.debug(s + " in matched branch beginning at " + nodeToSummarize);
 				rsSet.add(resultsByCategory.get(s));
 			}
 			Resultset rsToSummarize = DocumentSampler.combineResultsets(rsSet);
+			log.debug("sample-"+nodeToSummarize+"-"+database + " Document Sample size: " + rsToSummarize.getSize());
 			File outFile = new File(nodeToSummarize+"-"+database+".txt");
 			FileOutputStream fos = new FileOutputStream(outFile);
 			ContentSummary summary = ContentSummaryConstructor.construct(database, rsToSummarize);
@@ -153,6 +156,8 @@ public class Classify {
 	
 	/**
 	 * Combine a top node with all its descendants who matched in QProber. Return this new Resultset.
+	 * Note we need to add Resultsets of *direct children* of each node along the matching branch,
+	 * because those Resultsets are gotten via queries *associated with the matched node (the parent of those children)*
 	 * @param topNode The node to start with. Doesn't have to be "Root"
 	 * @param allMatchingNodes Set of all nodes that matched in QProber
 	 * @param hierarchy
@@ -161,8 +166,8 @@ public class Classify {
 	private static Set<String> getBranchToSummarize(String topNode, Set<String> allMatchingNodes, HashMap<String, String[]> hierarchy) {
 		HashSet<String> branchNodes = new HashSet<String>();
 		for (String child : hierarchy.get(topNode)) {
+			branchNodes.add(child); // Add ALL direct children, not just the matched ones!
 			if (allMatchingNodes.contains(child)) {
-				branchNodes.add(child);
 				branchNodes.addAll(getBranchToSummarize(child, allMatchingNodes, hierarchy));
 			}
 		}
@@ -366,38 +371,4 @@ public static double GetESpecificity(String database,String categ,
 	return numerator / denominator;
 }
 
-
-
-	// TODO get rid of this function??? Instead, pass the rs around outside, so we can reuse for ContentSummary
-	public static double NumberMatch(String query, String database){
-		try{
-			Query q = new Query(query);
-			
-	//		query = URLEncoder.encode(query, "UTF-8");
-	//		URL url = new URL("http://boss.yahooapis.com/ysearch/web/v1/"+query+"?appid=SeJQZ5fV34F7ohb4ONiSH9bbdWH9RtbodjvH_cN_BRj9QWEgfSFLW1h.Jkj0i52LT6I-&result=10&format=xml&sites="+database);
-	//		URLConnection connection = url.openConnection();
-	//		InputStream in=new DataInputStream(connection.getInputStream());
-	//		Document response = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
-	//        NodeList list=response.getElementsByTagName("resultset_web");
-	//		String out=((Element)list.item(0)).getAttribute("totalhits");
-	//		EachMatchNum=Integer.parseInt(out);
-			//System.out.println(EachMatchNum);
-			
-			// Takes the place of DocumentSampler...
-			Resultset rs = q.execute(4, database);
-			if (rs == null) {
-				log.warn("NumberMatch(): Resultset was null for query ["+query+"]");
-				return 0;
-			}
-	
-			docSamples.add(rs);
-			
-			return rs.getTotalHits();
-		}
-		catch(Exception e) {
-			System.err.println("There is a error!");
-			e.printStackTrace();
-			return 0;
-		} 
-	}
 }

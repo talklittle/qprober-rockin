@@ -100,7 +100,7 @@ public class RunnerCLI {
 		tec = Double.parseDouble(args[2]);
 		File defaultClassifications = new File(defaultClassificationsFile);
 		if (defaultClassifications.exists()) {
-			log.debug(defaultClassifications.getAbsolutePath() + " exists");
+			log.debug("Loading default classifications from " + defaultClassifications.getAbsolutePath());
 			try {
 				xmlReader = dbf.newDocumentBuilder();
 				xmlDoc = xmlReader.parse(defaultClassifications);

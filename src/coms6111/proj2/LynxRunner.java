@@ -81,7 +81,7 @@ public class LynxRunner {
         while (st.hasMoreTokens()) {
             String tok = st.nextToken();
             //System.out.println(tok);
-            log.debug("LynxRunner: Adding token " + tok);
+            //log.debug("LynxRunner: Adding token " + tok);
             document.add(tok);
         }
         return document;
