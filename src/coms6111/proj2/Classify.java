@@ -5,10 +5,8 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
@@ -20,16 +18,15 @@ public class Classify {
 	
 	public static HashMap<String, ClassificationNode> cTable;
 
-	public static List<Resultset> docSamples = null;
-
 	/**
-	 * Call this function before ClassifyDatabase
+	 * 
+	 * @param database
+	 * @param root
+	 * @param tec
+	 * @param tes
+	 * @return
+	 * @throws Exception
 	 */
-	public static void init() {
-		// initialize the document sampler results
-		docSamples = new ArrayList<Resultset>();
-	}
-	
 	public static String ClassifyDatabase(String database,String root, double tec, double tes) throws Exception{
 		HashMap<String, String[]> hierarchy = new HashMap<String, String[]>();
 		HashMap<String, String> reverseHierarchy = new HashMap<String, String>(); // parent list
@@ -59,15 +56,6 @@ public class Classify {
 		reverseHierarchy.put("Diseases", "Health");
 		reverseHierarchy.put("Basketball", "Sports");
 		reverseHierarchy.put("Soccer", "Sports");
-		
-//		String allCategory;
-		// Categories are stored in hierarchy table as name of final path component
-		// e.g., "Basketball" instead of "Root/Sports/Basketball"
-//		if (root.indexOf('/') != -1) {
-//			allCategory = root.substring(root.lastIndexOf('/')+1);
-//		} else {
-//			allCategory = root;
-//		}
 		
 		// Create a results and ECoverage table
 		for (String category : hierarchy.keySet()) {
@@ -106,7 +94,8 @@ public class Classify {
 				rsSet.add(resultsByCategory.get(s));
 			}
 			Resultset rsToSummarize = DocumentSampler.combineResultsets(rsSet);
-			log.debug("sample-"+nodeToSummarize+"-"+database + " Document Sample size: " + rsToSummarize.getSize());
+			log.info("sample-"+nodeToSummarize+"-"+database + "  Sample size: " + rsToSummarize.getSize());
+			log.info("Creating file: " + nodeToSummarize+"-"+database+".txt");
 			File outFile = new File(nodeToSummarize+"-"+database+".txt");
 			FileOutputStream fos = new FileOutputStream(outFile);
 			ContentSummary summary = ContentSummaryConstructor.construct(database, rsToSummarize);
@@ -122,14 +111,12 @@ public class Classify {
 		
 		// Check each child's coverage and specificity
 		for(String category : hierarchy.get(root)){
-//			double coverage=GetECoverage(website,category, rs);
 			double coverage = eCoverageTable.get(category);
 			double specificity = eSpecificityTable.get(category);
 
 			log.debug("category " + category + " coverage " + coverage + " specificity " + specificity);
 			if ((coverage>=tec)&&(specificity>=tes)){
 				log.debug("coverage and specificity above threshold for " + category);
-//				String subclassify = ClassifyDatabase(website, category);
 				String subMatches = classifyDatabaseHelper(website, category,
 						hierarchy, tec, tes, eCoverageTable, eSpecificityTable);
 				if (subMatches.length() > 0) {
@@ -313,62 +300,24 @@ public class Classify {
 		
 //		return TotalMatchNum;
 		return DocumentSampler.combineResultsets(rsSet);
-}
-
-public static double GetESpecificity(String database,String categ,
-		HashMap<String, String[]> hierarchy, HashMap<String, String> reverseHierarchy,
-		HashMap<String, Double> eCoverageTable){
-//	double specificity=0.0;
-//	double computerCoverage=GetECoverage(website,"Computers");
-//	double healthCoverage=GetECoverage(website,"Health");
-//	double sportsCoverage=GetECoverage(website,"Sports");
-//	double hardwareCoverage=GetECoverage(website,"Hardware");
-//	double programmingCoverage=GetECoverage(website,"Programming");
-//	double fitnessCoverage=GetECoverage(website,"Fitness");
-//	double diseaseCoverage=GetECoverage(website,"Diseases");
-//	double basketballCoverage=GetECoverage(website,"Basketball");
-//	double soccerCoverage=GetECoverage(website,"Soccer");
-	
-//	if (categ.equals("Computers")){
-//		specificity=computerCoverage/(computerCoverage+healthCoverage+sportsCoverage);
-//		}
-//	else if (categ.equals("Health")){
-//		specificity=healthCoverage/(computerCoverage+healthCoverage+sportsCoverage);
-//	}
-//	else if (categ.equals("Sports")){
-//		specificity=sportsCoverage/(computerCoverage+healthCoverage+sportsCoverage);
-//	}
-//	else if (categ.equals("Hardware")){
-//		specificity=hardwareCoverage/(hardwareCoverage+programmingCoverage);
-//	}
-//	else if (categ.equals("Programming")){
-//		specificity=programmingCoverage/(hardwareCoverage+programmingCoverage);
-//	}
-//	else if (categ.equals("Basketball")){
-//		specificity=basketballCoverage/(basketballCoverage+soccerCoverage);
-//	}
-//	else if (categ.equals("Soccer")){
-//		specificity=soccerCoverage/(basketballCoverage+soccerCoverage);
-//	}
-//	else if (categ.equals("Fitness")){
-//		specificity=fitnessCoverage/(fitnessCoverage+diseaseCoverage);
-//	}
-//	else if (categ.equals("Diseases")){
-//		specificity=diseaseCoverage/(fitnessCoverage+diseaseCoverage);
-//	}
-	
-	if (categ.equals("Root"))
-		return 1.0;
-	
-	String parent = reverseHierarchy.get(categ);
-	double denominator = 0.0;
-	for (String sibling : hierarchy.get(parent)) {
-		denominator += eCoverageTable.get(sibling);
 	}
-	
-	double numerator = GetESpecificity(database, parent, hierarchy, reverseHierarchy, eCoverageTable) * eCoverageTable.get(categ);
-	
-	return numerator / denominator;
-}
+
+	public static double GetESpecificity(String database,String categ,
+			HashMap<String, String[]> hierarchy, HashMap<String, String> reverseHierarchy,
+			HashMap<String, Double> eCoverageTable){
+		
+		if (categ.equals("Root"))
+			return 1.0;
+		
+		String parent = reverseHierarchy.get(categ);
+		double denominator = 0.0;
+		for (String sibling : hierarchy.get(parent)) {
+			denominator += eCoverageTable.get(sibling);
+		}
+		
+		double numerator = GetESpecificity(database, parent, hierarchy, reverseHierarchy, eCoverageTable) * eCoverageTable.get(categ);
+		
+		return numerator / denominator;
+	}
 
 }
