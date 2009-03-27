@@ -16,6 +16,8 @@ public class RunnerCLI {
 	
 	protected static final Log log = LogFactory.getLog(RunnerCLI.class);
 	
+	public static final String defaultClassificationsFile = "defaultClassifications.xml";
+	
 	private static DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	private static HashMap<String, ClassificationNode> classificationNodes = new HashMap<String, ClassificationNode>();
 	
@@ -85,13 +87,18 @@ public class RunnerCLI {
 	public static void main(String[] args) {
 		DocumentBuilder xmlReader;
 		Document xmlDoc;
+		String database;
+		double tes, tec;
 		
-		if (args.length < 1) {
+		if (args.length < 3) {
 			log.error("Usage:");
-			log.error("java RunnerCLI <defaultClassifications.xml>");
+			log.error("java RunnerCLI <database> <tes (0.6)> <tec (100)>");
 			System.exit(1);
 		}
-		File defaultClassifications = new File(args[0]);
+		database = args[0];
+		tes = Double.parseDouble(args[1]);
+		tec = Double.parseDouble(args[2]);
+		File defaultClassifications = new File(defaultClassificationsFile);
 		if (defaultClassifications.exists()) {
 			log.debug(defaultClassifications.getAbsolutePath() + " exists");
 			try {
@@ -132,7 +139,7 @@ public class RunnerCLI {
 			hierarchy.put("Soccer",new String[0]);
 			
 			Classify.init();
-			String category = Classify.ClassifyDatabase("NBA.com","Root", 100, 0.6);
+			String category = Classify.ClassifyDatabase(database,"Root", tec, tes);
 			log.info("Category: " + category);
 		} catch (Exception e) {
 			log.error("Error classifying database", e);
