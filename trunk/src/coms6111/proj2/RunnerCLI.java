@@ -100,7 +100,7 @@ public class RunnerCLI {
 		tec = Double.parseDouble(args[2]);
 		File defaultClassifications = new File(defaultClassificationsFile);
 		if (defaultClassifications.exists()) {
-			log.debug("Loading default classifications from " + defaultClassifications.getAbsolutePath());
+			log.info("Loading default classifications from " + defaultClassifications.getAbsolutePath());
 			try {
 				xmlReader = dbf.newDocumentBuilder();
 				xmlDoc = xmlReader.parse(defaultClassifications);
@@ -111,19 +111,10 @@ public class RunnerCLI {
 				System.exit(1);
 			}
 		} else {
-			log.debug("Couldn't find file " + defaultClassifications.getAbsolutePath() + " exists");
+			log.error("Couldn't find file " + defaultClassifications.getAbsolutePath());
+			System.exit(1);
 		}
 
-//		for (String category : classificationNodes.keySet()) {
-//			log.debug("CATEGORY: " + category);
-//			ClassificationNode cn = classificationNodes.get(category);
-//			
-//			for (String query : cn.getQueries()) {
-//				log.debug("[" + query + "] -- " + cn.getChildByQuery(query).getName());
-//			}
-//			log.debug("--");
-//		}
-		
 		Classify.cTable = classificationNodes;
 		try {
 			HashMap<String, String[]> hierarchy = new HashMap<String, String[]>();
@@ -138,27 +129,11 @@ public class RunnerCLI {
 			hierarchy.put("Basketball",new String[0]);
 			hierarchy.put("Soccer",new String[0]);
 			
-			Classify.init();
 			String category = Classify.ClassifyDatabase(database,"Root", tec, tes);
-			log.info("Category: " + category);
+			log.info("Database:" + database + "  Category: " + category);
 		} catch (Exception e) {
 			log.error("Error classifying database", e);
 		}
 		
-//		// DEBUG
-//		TreeSet<String> categories = new TreeSet<String>();
-//		categories.add("Root");
-//		categories.add("Health");
-//		Set<String> queries = DocumentSampler.getQueriesToSample(categories, classificationNodes);
-//		URL site = null;
-//		try {
-//			site = new URL("http://diabetes.org");
-//		} catch (MalformedURLException e) {
-//			log.error("Bad url", e);
-//			System.exit(0);
-//		}
-//		Resultset rs = DocumentSampler.sample(site, queries);
-//		ContentSummary cs = ContentSummaryConstructor.construct("http://diabetes.org", rs);
-//		cs.printAlphabeticalOrder(System.out);
 	}
 }
