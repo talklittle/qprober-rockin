@@ -32,12 +32,9 @@ public class Query {
 	    // Construct query URL
 	    request += myQueryString + "?";
 	    request += "appid=" + appid + "&";
-	    //request += "count=" + numResults + "&";
+	    request += "count=" + numResults + "&";
 	    request += "sites=" + sites + "&";
 	    request += "format=xml";
-	    //request += "sites=" + sites + "&";
-	    //log.debug(request);
-	    
 	    
 	    GetMethod method = new GetMethod(request);
 
