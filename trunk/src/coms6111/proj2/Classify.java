@@ -69,6 +69,8 @@ public class Classify {
 		}
 		
 		String classifications = classifyDatabaseHelper(database, "Root", hierarchy, tec, tes, eCoverageTable, eSpecificityTable);
+		if (classifications.length() == 0)
+			classifications = "Root";
 		
 		// Create ContentSummary
 		
