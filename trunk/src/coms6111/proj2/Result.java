@@ -32,5 +32,15 @@ public class Result {
 		}
 	}
 	
-	
+	public boolean equals(Object other) {
+		Result otherR;
+		try {
+			otherR = (Result) other;
+		} catch (ClassCastException e) {
+			return false;
+		}
+		return (this.title.equals(otherR.title))
+				&& (this.summary.equals(otherR.summary))
+				&& (this.url.equals(otherR.url));
+	}
 }
